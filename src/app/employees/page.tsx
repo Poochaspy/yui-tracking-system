@@ -1,7 +1,8 @@
-import { Users, Plus, Search } from 'lucide-react';
+import { Users, Search } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
 import { User } from '@/models/User';
-import '@/models/Department'; // Ensure Department model is registered for populate
+import { Department } from '@/models/Department';
+import CreateEmployeeModal from '@/components/CreateEmployeeModal';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +19,7 @@ async function getEmployees() {
 
 export default async function EmployeesPage() {
   const employees = await getEmployees();
+  const departments = await Department.find({}).lean();
 
   return (
     <div className="space-y-6">
@@ -26,10 +28,7 @@ export default async function EmployeesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Employees</h1>
           <p className="text-gray-500 mt-1">Manage staff directory and working status.</p>
         </div>
-        <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-indigo-500/30">
-          <Plus className="w-5 h-5" />
-          <span>Add Employee</span>
-        </button>
+        <CreateEmployeeModal departments={JSON.parse(JSON.stringify(departments))} />
       </div>
 
       <div className="glass-card rounded-2xl overflow-hidden">
