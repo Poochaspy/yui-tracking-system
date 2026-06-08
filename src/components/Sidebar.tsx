@@ -15,9 +15,13 @@ const navItems = [
 export default function Sidebar() {
   return (
     <aside className="w-64 glass-panel border-r border-r-white/10 hidden md:flex flex-col h-full sticky top-0">
-      <div className="h-16 flex items-center px-6 border-b border-white/10">
-        <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
-          ARDRAM TRACKER
+      <div className="h-20 flex items-center px-6 border-b border-white/10 gap-3">
+        {/* Logo Placeholder */}
+        <div className="w-10 h-10 rounded-xl bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center shrink-0" id="logo-placeholder">
+          <span className="text-[10px] text-gray-400 font-medium">LOGO</span>
+        </div>
+        <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent leading-tight">
+          ARDRAM<br/>TRACKER
         </h1>
       </div>
       <nav className="flex-1 py-6 px-4 space-y-2">
