@@ -4,6 +4,7 @@ import { Assignment } from '@/models/Assignment';
 import { User } from '@/models/User';
 import { Trainee } from '@/models/Trainee';
 import CreateAssignmentModal from '@/components/CreateAssignmentModal';
+import TaskStatusButton from '@/components/TaskStatusButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,13 +75,7 @@ export default async function AssignmentsPage() {
                     <td className="p-4 text-gray-500">{assignment.assignedTo?.name || 'Unknown'}</td>
                     <td className="p-4 text-gray-500">{assignment.assignedModel}</td>
                     <td className="p-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        assignment.status === 'Completed' ? 'bg-emerald-500/20 text-emerald-500' :
-                        assignment.status === 'In Progress' ? 'bg-blue-500/20 text-blue-500' :
-                        'bg-amber-500/20 text-amber-500'
-                      }`}>
-                        {assignment.status}
-                      </span>
+                      <TaskStatusButton currentStatus={assignment.status} assignmentId={assignment._id} />
                     </td>
                   </tr>
                 ))

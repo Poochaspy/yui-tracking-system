@@ -9,6 +9,15 @@ import { Assignment } from '@/models/Assignment';
 import { Shift } from '@/models/Shift';
 import { ShiftAssignment } from '@/models/ShiftAssignment';
 import { Attendance } from '@/models/Attendance';
+import { ActivityLog } from '@/models/ActivityLog';
+
+async function logActivity(entityId: string, entityModel: string, action: string, description: string) {
+  try {
+    await ActivityLog.create({ entityId, entityModel, action, description });
+  } catch (err) {
+    console.error('Failed to log activity:', err);
+  }
+}
 
 export async function createDepartment(formData: FormData) {
   try {
@@ -81,6 +90,7 @@ export async function createAssignment(formData: FormData) {
     const [assignedModel, assignedTo] = personnelData.split(':');
 
     await Assignment.create({ title, description, assignedTo, assignedModel, status: 'Pending' });
+    await logActivity(assignedTo, assignedModel, 'Task Assigned', `Assigned task: ${title}`);
     
     revalidatePath('/assignments');
     return { success: true };
@@ -119,6 +129,7 @@ export async function createShiftAssignment(formData: FormData) {
     const [personnelModel, personnelId] = personnelData.split(':');
 
     await ShiftAssignment.create({ shiftId, personnelId, personnelModel, date });
+    await logActivity(personnelId, personnelModel, 'Shift Assigned', `Assigned to shift on ${date}`);
     
     revalidatePath('/shifts');
     return { success: true };
@@ -144,11 +155,50 @@ export async function checkIn(personnelId: string, personnelModel: 'User' | 'Tra
       date,
       checkInTime: new Date()
     });
+    await logActivity(personnelId, personnelModel, 'Clock In', 'Clocked in for the day');
     
     revalidatePath('/attendance');
     return { success: true };
   } catch (error: any) {
     console.error(error);
     return { success: false, error: error.message || 'Failed to check in' };
+  }
+}
+
+export async function updateStatus(personnelId: string, modelType: 'User' | 'Trainee', newStatus: string) {
+  try {
+    await dbConnect();
+    const Model = modelType === 'User' ? User : Trainee;
+    const personnel = await Model.findByIdAndUpdate(personnelId, { status: newStatus }, { new: true });
+    
+    if (personnel) {
+      await logActivity(personnelId, modelType, 'Status Changed', `Status updated to '${newStatus}'`);
+    }
+
+    revalidatePath('/employees');
+    revalidatePath('/trainees');
+    revalidatePath('/logs');
+    return { success: true };
+  } catch (error: any) {
+    console.error(error);
+    return { success: false, error: error.message || 'Failed to update status' };
+  }
+}
+
+export async function updateAssignmentStatus(assignmentId: string, newStatus: string) {
+  try {
+    await dbConnect();
+    const assignment = await Assignment.findByIdAndUpdate(assignmentId, { status: newStatus }, { new: true });
+    
+    if (assignment) {
+      await logActivity(assignment.assignedTo.toString(), assignment.assignedModel, 'Task Updated', `Task '${assignment.title}' marked as ${newStatus}`);
+    }
+
+    revalidatePath('/assignments');
+    revalidatePath('/logs');
+    return { success: true };
+  } catch (error: any) {
+    console.error(error);
+    return { success: false, error: error.message || 'Failed to update task status' };
   }
 }

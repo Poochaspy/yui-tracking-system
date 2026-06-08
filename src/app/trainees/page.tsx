@@ -1,7 +1,9 @@
-import { UserCog, Plus, Search } from 'lucide-react';
+import { UserCog, Search } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
 import { Trainee } from '@/models/Trainee';
-import '@/models/Department'; // Ensure Department model is registered
+import { Department } from '@/models/Department';
+import CreateTraineeModal from '@/components/CreateTraineeModal';
+import StatusDropdown from '@/components/StatusDropdown';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +20,9 @@ async function getTrainees() {
 
 export default async function TraineesPage() {
   const trainees = await getTrainees();
+  await dbConnect();
+  const departments = await Department.find({}).lean();
+  const deptData = JSON.parse(JSON.stringify(departments));
 
   return (
     <div className="space-y-6">
@@ -26,10 +31,7 @@ export default async function TraineesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Trainees</h1>
           <p className="text-gray-500 mt-1">Manage trainee allocations and attendance.</p>
         </div>
-        <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-indigo-500/30">
-          <Plus className="w-5 h-5" />
-          <span>Add Trainee</span>
-        </button>
+        <CreateTraineeModal departments={deptData} />
       </div>
 
       <div className="glass-card rounded-2xl overflow-hidden">
@@ -66,14 +68,7 @@ export default async function TraineesPage() {
                     <td className="p-4 text-gray-500">{trainee.email}</td>
                     <td className="p-4 text-gray-500">{trainee.departmentId?.name || 'Unassigned'}</td>
                     <td className="p-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        trainee.status === 'Working' ? 'bg-emerald-500/20 text-emerald-500' :
-                        trainee.status === 'Available' ? 'bg-blue-500/20 text-blue-500' :
-                        trainee.status === 'On Break' ? 'bg-amber-500/20 text-amber-500' :
-                        'bg-gray-500/20 text-gray-500'
-                      }`}>
-                        {trainee.status}
-                      </span>
+                      <StatusDropdown currentStatus={trainee.status} personnelId={trainee._id} modelType="Trainee" />
                     </td>
                   </tr>
                 ))

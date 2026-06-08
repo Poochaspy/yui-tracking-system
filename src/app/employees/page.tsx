@@ -3,6 +3,7 @@ import dbConnect from '@/lib/mongodb';
 import { User } from '@/models/User';
 import { Department } from '@/models/Department';
 import CreateEmployeeModal from '@/components/CreateEmployeeModal';
+import StatusDropdown from '@/components/StatusDropdown';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,14 +66,7 @@ export default async function EmployeesPage() {
                     <td className="p-4 text-gray-500">{emp.email}</td>
                     <td className="p-4 text-gray-500">{emp.departmentId?.name || 'Unassigned'}</td>
                     <td className="p-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        emp.status === 'Working' ? 'bg-emerald-500/20 text-emerald-500' :
-                        emp.status === 'Available' ? 'bg-blue-500/20 text-blue-500' :
-                        emp.status === 'On Break' ? 'bg-amber-500/20 text-amber-500' :
-                        'bg-gray-500/20 text-gray-500'
-                      }`}>
-                        {emp.status}
-                      </span>
+                      <StatusDropdown currentStatus={emp.status} personnelId={emp._id} modelType="User" />
                     </td>
                   </tr>
                 ))
