@@ -8,6 +8,7 @@ const navItems = [
   { name: 'Trainees', href: '/trainees', icon: UserCog },
   { name: 'Assignments', href: '/assignments', icon: ClipboardList },
   { name: 'Attendance', href: '/attendance', icon: Clock },
+  { name: 'Shifts', href: '/shifts', icon: Clock },
   { name: 'Logs', href: '/logs', icon: FileText },
 ];
 

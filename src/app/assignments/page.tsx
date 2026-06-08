@@ -1,8 +1,9 @@
-import { ClipboardList, Plus, Search } from 'lucide-react';
+import { ClipboardList, Search } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
 import { Assignment } from '@/models/Assignment';
-import '@/models/User';
-import '@/models/Trainee';
+import { User } from '@/models/User';
+import { Trainee } from '@/models/Trainee';
+import CreateAssignmentModal from '@/components/CreateAssignmentModal';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,15 @@ async function getAssignments() {
 export default async function AssignmentsPage() {
   const assignments = await getAssignments();
 
+  await dbConnect();
+  const users = await User.find({}).lean();
+  const trainees = await Trainee.find({}).lean();
+  
+  const personnel = [
+    ...users.map((u: any) => ({ _id: u._id.toString(), name: u.name, model: 'User' })),
+    ...trainees.map((t: any) => ({ _id: t._id.toString(), name: t.name, model: 'Trainee' }))
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -27,10 +37,7 @@ export default async function AssignmentsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Assignments</h1>
           <p className="text-gray-500 mt-1">Manage and track tasks assigned to personnel.</p>
         </div>
-        <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition-colors shadow-lg shadow-indigo-500/30">
-          <Plus className="w-5 h-5" />
-          <span>New Assignment</span>
-        </button>
+        <CreateAssignmentModal personnel={personnel} />
       </div>
 
       <div className="glass-card rounded-2xl overflow-hidden">

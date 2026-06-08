@@ -1,4 +1,5 @@
 import { Users, Building2, ClipboardList, Activity } from 'lucide-react';
+import { AttendanceChart, DepartmentPieChart } from '@/components/DashboardCharts';
 
 export default function Dashboard() {
   return (
@@ -39,26 +40,47 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 glass-card rounded-2xl p-6">
-          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-bold mb-1">Attendance Trends</h2>
+          <p className="text-sm text-gray-500">7-day rolling average</p>
+          <AttendanceChart />
+        </div>
+        
+        <div className="glass-card rounded-2xl p-6 flex flex-col items-center">
+          <div className="w-full text-left">
+            <h2 className="text-xl font-bold mb-1">Department Allocation</h2>
+            <p className="text-sm text-gray-500">Distribution of active personnel</p>
+          </div>
+          <DepartmentPieChart />
+          <div className="w-full mt-4 space-y-2">
+            <LegendItem color="#6366f1" label="Cardiology" value="40%" />
+            <LegendItem color="#8b5cf6" label="Emergency" value="30%" />
+            <LegendItem color="#ec4899" label="Neurology" value="15%" />
+            <LegendItem color="#14b8a6" label="Pediatrics" value="15%" />
+          </div>
+        </div>
+      </div>
+      
+      <div className="glass-card rounded-2xl p-6">
+          <h2 className="text-lg font-semibold mb-4">Recent Activity Logs</h2>
           <div className="space-y-4">
-            {/* Activity list placeholder */}
             <ActivityItem time="10 mins ago" text="Dr. Smith changed status to 'Working'" />
             <ActivityItem time="1 hour ago" text="Trainee Alice assigned to Cardiology" />
             <ActivityItem time="2 hours ago" text="Task 'ICU Rounds' completed by Mark" />
             <ActivityItem time="5 hours ago" text="New department 'Neurology' added" />
           </div>
-        </div>
-        
-        <div className="glass-card rounded-2xl p-6">
-          <h2 className="text-lg font-semibold mb-4">Department Occupancy</h2>
-          <div className="space-y-4">
-            <OccupancyItem name="Cardiology" percent={85} />
-            <OccupancyItem name="Emergency" percent={92} />
-            <OccupancyItem name="Pediatrics" percent={60} />
-            <OccupancyItem name="Neurology" percent={45} />
-          </div>
-        </div>
       </div>
+    </div>
+  );
+}
+
+function LegendItem({ color, label, value }: { color: string, label: string, value: string }) {
+  return (
+    <div className="flex justify-between items-center text-sm">
+      <div className="flex items-center gap-2">
+        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }}></div>
+        <span>{label}</span>
+      </div>
+      <span className="font-medium text-gray-400">{value}</span>
     </div>
   );
 }
