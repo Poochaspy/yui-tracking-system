@@ -16,7 +16,7 @@ export default function Sidebar() {
     <aside className="w-64 glass-panel border-r border-r-white/10 hidden md:flex flex-col h-full sticky top-0">
       <div className="h-16 flex items-center px-6 border-b border-white/10">
         <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
-          YUI Tracking
+          ARDRAM TRACKER
         </h1>
       </div>
       <nav className="flex-1 py-6 px-4 space-y-2">

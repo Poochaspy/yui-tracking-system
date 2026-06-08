@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "YUI Tracking System",
+  title: "ARDRAM TRACKER",
   description: "ERPNext-inspired tracking system for employees and trainees.",
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({
             {/* Header placeholder for mobile / profile */}
             <header className="h-16 glass-panel border-b border-b-white/10 flex items-center justify-between px-6 sticky top-0 z-10 md:hidden">
               <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
-                YUI Tracking
+                ARDRAM TRACKER
               </h1>
             </header>
             <div className="p-6 md:p-8">
