@@ -1,65 +1,108 @@
-import Image from "next/image";
+import { Users, Building2, ClipboardList, Activity } from 'lucide-react';
 
-export default function Home() {
+export default function Dashboard() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
+          Monitor your hospital operations, staff, and trainee activities in real-time.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <DashboardCard 
+          title="Total Personnel" 
+          value="142" 
+          subtitle="+12 this month" 
+          icon={<Users className="w-5 h-5 text-indigo-500" />} 
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        <DashboardCard 
+          title="Active Departments" 
+          value="8" 
+          subtitle="All operational" 
+          icon={<Building2 className="w-5 h-5 text-purple-500" />} 
+        />
+        <DashboardCard 
+          title="Pending Assignments" 
+          value="24" 
+          subtitle="4 overdue" 
+          icon={<ClipboardList className="w-5 h-5 text-pink-500" />} 
+        />
+        <DashboardCard 
+          title="On Shift Today" 
+          value="89" 
+          subtitle="87% attendance" 
+          icon={<Activity className="w-5 h-5 text-emerald-500" />} 
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 glass-card rounded-2xl p-6">
+          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+          <div className="space-y-4">
+            {/* Activity list placeholder */}
+            <ActivityItem time="10 mins ago" text="Dr. Smith changed status to 'Working'" />
+            <ActivityItem time="1 hour ago" text="Trainee Alice assigned to Cardiology" />
+            <ActivityItem time="2 hours ago" text="Task 'ICU Rounds' completed by Mark" />
+            <ActivityItem time="5 hours ago" text="New department 'Neurology' added" />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        
+        <div className="glass-card rounded-2xl p-6">
+          <h2 className="text-lg font-semibold mb-4">Department Occupancy</h2>
+          <div className="space-y-4">
+            <OccupancyItem name="Cardiology" percent={85} />
+            <OccupancyItem name="Emergency" percent={92} />
+            <OccupancyItem name="Pediatrics" percent={60} />
+            <OccupancyItem name="Neurology" percent={45} />
+          </div>
         </div>
-      </main>
+      </div>
+    </div>
+  );
+}
+
+function DashboardCard({ title, value, subtitle, icon }: any) {
+  return (
+    <div className="glass-card rounded-2xl p-6 flex flex-col gap-2 relative overflow-hidden group">
+      <div className="flex justify-between items-start">
+        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
+        <div className="p-2 bg-white/5 rounded-lg border border-white/10">{icon}</div>
+      </div>
+      <div>
+        <h3 className="text-3xl font-bold">{value}</h3>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
+function ActivityItem({ time, text }: { time: string, text: string }) {
+  return (
+    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5">
+      <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
+      <div className="flex-1">
+        <p className="text-sm">{text}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{time}</p>
+      </div>
+    </div>
+  );
+}
+
+function OccupancyItem({ name, percent }: { name: string, percent: number }) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex justify-between text-sm">
+        <span>{name}</span>
+        <span className="font-medium">{percent}%</span>
+      </div>
+      <div className="w-full bg-gray-200 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+        <div 
+          className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-1000 ease-out" 
+          style={{ width: `${percent}%` }}
+        ></div>
+      </div>
     </div>
   );
 }
