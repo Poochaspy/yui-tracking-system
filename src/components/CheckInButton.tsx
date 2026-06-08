@@ -25,7 +25,7 @@ export default function CheckInButton({ personnelId, personnelModel, hasCheckedI
     <button 
       onClick={handleCheckIn}
       disabled={loading}
-      className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-full transition-colors disabled:opacity-50"
+      className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700  text-xs font-medium rounded-full transition-colors disabled:opacity-50"
     >
       {loading ? 'Clocking in...' : 'Clock In'}
     </button>
